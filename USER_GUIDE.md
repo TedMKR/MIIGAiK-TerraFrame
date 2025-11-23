@@ -100,7 +100,7 @@
 
 
 
-![Панель слоёв](scrns/layers.png)
+![Панель слоёв](scrns/Layers.png)
 
 ---
 
