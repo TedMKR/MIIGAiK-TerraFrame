@@ -105,7 +105,8 @@ var buttonPanel = ui.Panel(
     ui.Panel.Layout.Flow('horizontal'),
     {stretch: 'horizontal', margin: '0px 0px 0px 0px'});
 
-var coordZoom = ui.Textbox({placeholder:'Координаты', value:'37.63135958, 55.67095556', style:{width:'180px'}});
+// Поле для координат - изначально пустое, будет заполняться при клике на карту
+var coordZoom = ui.Textbox({placeholder:'Click on the map', value:'', style:{width:'180px'}});
 var coordZoomDa = ui.Button({label: 'Zoom 📸' , style: {margin: '0px 0px 0px -16px', width:'70px'}});
 
 var ZoomSlider = ui.Slider({min: 6, max: 18, value: 15,
@@ -143,19 +144,25 @@ var aboutLabel = ui.Label(
     'Built on Google Earth Engine to quickly inspect locations, compare dates and export ready-to-use image chips.\n' +
     '\n' +
     'Key features:\n' +
-    '\u2022 Multi-sensor support (Sentinel-2 & Landsat-8/9 SR/TOA)\n' +
-    '\u2022 Flexible RGB band combinations\n' +
-    '\u2022 Cloud filtering and custom date range\n' +
-    '\u2022 Interactive image chips with AOI overlay\n' +
-    '\u2022 Layer manager for temporal comparison\n' +
-    '\u2022 Export for ML / GIS workflows (GeoTIFF / TFRecord) \n' +
-    '\n' +
-    'How to use:\n\n' +
-    ' 1. Choose sensors, RGB preset and filters in the Options panel.\n' +
-    '2. Click any point on the map to load available scenes.\n' +
-    '3. Scroll through image chips and add selected dates to the map.\n' +
-    '4. Use the Download panel to collect links for batch saving.\n'
+    ' multi-sensor support (Sentinel-2 & Landsat-8/9 SR/TOA),\n' +
+    ' flexible RGB band combinations,\n' +
+    ' cloud filtering and custom date range,\n' +
+    ' interactive image chips with AOI overlay,\n' +
+    ' layer manager for temporal comparison,\n' +
+    ' export (GeoTIFF / TFRecord). \n'
 );
+
+var appCodeLink = ui.Label({
+    value: 'App source code',
+    style: {fontSize: '11px', color: '#505050', margin: '-4px 8px 0px 8px'},
+    targetUrl: 'https://github.com/TedMKR/MIIGAiK-TerraFrame'
+});
+
+var appUserGuide = ui.Label({
+    value: 'User guide',
+    style: {fontSize: '11px', color: '#505050', margin: '4px 8px 0px 8px'},
+    targetUrl: 'https://github.com/TedMKR/MIIGAiK-TerraFrame/blob/main/USER_GUIDE.md'
+});
 
 // Выбор источников данных (несколько сразу через чекбоксы).
 var sensorLabel = ui.Label({value: 'Sensor selection', style: headerFont});
@@ -258,7 +265,7 @@ var imgCardPanel = ui.Panel({
 });
 
 var emptyImagePanelLabel = ui.Label({
-    value: 'Adjust the options and click on the map to upload images \n\Select a location and the images will appear here \n\The list of links for downloading images is located on the left panel in the "Download" section',
+    value: 'Adjust the options and click on the map to upload images \n Select a location and the images will appear here \n The list of links for downloading images is located on the left panel in the "Download" section',
     style: {
         fontSize: '14px',
         color: '#888',
@@ -522,6 +529,15 @@ var sensorInfo = {
 // ================================================================================
 // ‖                                    ФУНКЦИИ                                   ‖
 // ================================================================================
+
+/**
+ * Обновляет поле координат при клике на карту
+ */
+function updateCoordField(coords) {
+    var lon = coords.lon.toFixed(8);
+    var lat = coords.lat.toFixed(8);
+    coordZoom.setValue(lon + ', ' + lat);
+}
 
 /**
  * Подготовка снимков Landsat 8/9 Level-2 (SR):
@@ -859,7 +875,7 @@ function toggleLayerVisibility(layerId, visible) {
 }
 
 /**
- * Удаляет слой с карты и из панели управления
+ * Удаляет слой с карту и из панели управления
  */
 function removeLayerFromMap(layerId) {
     if (mapLayers[layerId]) {
@@ -1116,6 +1132,10 @@ function handleMapClick(coords) {
     ui.url.set('run', 'true');
     ui.url.set('lon', COORDS[0]);
     ui.url.set('lat', COORDS[1]);
+    
+    // ОБНОВЛЯЕМ ПОЛЕ КООРДИНАТ ПРИ КАЖДОМ КЛИКЕ
+    updateCoordField(coords);
+    
     renderGraphics(COORDS);
 }
 
@@ -1236,6 +1256,8 @@ function downloadButtonHandler() {
 
 infoElements.add(infoLabel);
 infoElements.add(aboutLabel);
+infoElements.add(appCodeLink);
+infoElements.add(appUserGuide);
 
 controlElements.add(optionsLabel);
 controlElements.add(sensorPanel);
@@ -1301,10 +1323,14 @@ ui.root.clear();
 ui.root.add(splitPanel);
 
 // Обработка URL-параметров при запуске приложения: если есть координаты,
-// сразу запускаем рендер.
+// сразу запускаем рендер
 // Автозапуск только при явном run=true
 if (ui.url.get('run') === 'true') {
     CLICKED = true;
     COORDS = [ui.url.get('lon'), ui.url.get('lat')];
+    
+    // ОБНОВЛЯЕМ ПОЛЕ КООРДИНАТ ПРИ ЗАГРУЗКЕ С СОХРАНЕННЫМИ КООРДИНАТАМИ
+    updateCoordField({lon: COORDS[0], lat: COORDS[1]});
+    
     renderGraphics(COORDS);
 }
