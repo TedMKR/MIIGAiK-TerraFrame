@@ -14,9 +14,7 @@
 </p>
 
 ### или:
-1. Перейдите в:
-
-`https://code.earthengine.google.com/` и вставьте код из `MIIGAiK-TerraFrame.js`.
+1. Перейдите в: `https://code.earthengine.google.com/` и вставьте код из `MIIGAiK-TerraFrame.js`.
 
 2. Нажмите кнопку **Run** в верхней части Code Editor.
 
