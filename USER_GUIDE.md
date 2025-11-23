@@ -7,7 +7,7 @@
 
 ### Перейдите в Демо
 <p align="center">
-  <a href="https://code.earthengine.google.com/92b25fa5332615edf1f6f9275cf6f558?hideCode=true#run=false;sensor=Sentinel-2%20SR;lon=37.63201417;lat=55.6710341;rgb=RED/GREEN/BLUE;cloud=10;zzz=10;chipwidth=10;format=GEO_TIFF;compression=false;" target="_blank" style="text-decoration:none;">
+  <a href="https://code.earthengine.google.com/b29b5d1e95dfa7e952c1adde798a0649?hideCode=true" target="_blank" style="text-decoration:none;">
     <img src="https://img.shields.io/badge/▶%20Открыть%20демо%20в%20Earth%20Engine-1a73e8?style=for-the-badge&logo=googleearth&logoColor=white" alt="Демо Google Earth Engine" />
   </a>
   <br/>
