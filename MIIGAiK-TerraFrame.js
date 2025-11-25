@@ -42,16 +42,6 @@ var initChipWidth = 10;
 var chipWidthUrl = ui.url.get('chipwidth', initChipWidth);
 ui.url.set('chipwidth', chipWidthUrl);
 
-// Выбор формата экспорта
-var initFormat = 'GEO_TIFF';
-var formatUrl = ui.url.get('format', initFormat);
-ui.url.set('format', formatUrl);
-
-// Контроль сжатия TIFF файлов
-var initCompression = false; // По умолчанию без сжатия для лучшего качества
-var compressionUrl = ui.url.get('compression', initCompression);
-ui.url.set('compression', compressionUrl);
-
 
 
 // ================================================================================
@@ -60,6 +50,7 @@ ui.url.set('compression', compressionUrl);
 
 // Общие стили UI-элементов.
 var CONTROL_PANEL_WIDTH = '280px';
+var CONTROL_PANEL_WIDTH_HIDE = '141px';
 var textFont = {fontSize: '12px'};
 var headerFont = {
     fontSize: '13px', fontWeight: 'bold', margin: '4px 8px 0px 8px'};
@@ -69,10 +60,8 @@ var infoFont = {fontSize: '11px', color: '#505050'};
 
 // Левая панель с кнопками и опциями.
 var controlPanel = ui.Panel({
-    style: {
-        position: 'top-left', width: CONTROL_PANEL_WIDTH,
-        maxHeight: '90%'
-    }});
+    style: {position: 'top-left', width: CONTROL_PANEL_WIDTH_HIDE, maxHeight: '90%'}
+});
 
 // Панель «About» (описание приложения).
 var infoElements = ui.Panel(
@@ -82,26 +71,19 @@ var infoElements = ui.Panel(
 var controlElements = ui.Panel(
     {style: {shown: false, margin: '0px -8px 0px -8px'}});
 
-// Панель для загрузки
-var downloadElements = ui.Panel(
-    {style: {shown: false, margin: '0px -8px 0px -8px'}});
-
-
 // Кнопка «About»: показать/скрыть описание.
 var infoButton = ui.Button(
-    {label: 'About ❯', style: {margin: '0px 4px 0px 0px', width: '72px'}});
+    {label: 'About ❯', style: {margin: '0px 4px 0px 0px'}});
 
 // Кнопка «Options»: показать/скрыть настройки.
 var controlButton = ui.Button(
-    {label: 'Options ❯', style: {margin: '0px 4px 0px 0px', width: '72px'}});
+    {label: 'Options ❯', style: {margin: '0px 0px 0px 0px'}});
 
-// Кнопка «Download»: показать/скрыть загрузки.
-var downloadButton = ui.Button(
-    {label: 'Download ❯', style: {margin: '0px 0px 0px 0px', width: '72px'}});
 
-// Панель для размещения кнопок «About», «Options» и «Download».
+
+// Панель для размещения кнопок «About» и «Options».
 var buttonPanel = ui.Panel(
-    [infoButton, controlButton, downloadButton],
+    [infoButton, controlButton],
     ui.Panel.Layout.Flow('horizontal'),
     {stretch: 'horizontal', margin: '0px 0px 0px 0px'});
 
@@ -133,9 +115,6 @@ optionsLabel.style().set('margin', '16px 8px 2px 8px');
 // Заголовок секции «About».
 var infoLabel = ui.Label('About', sectionFont);
 
-// Заголовок секции «Download».
-var downloadLabel = ui.Label('Download', sectionFont);
-
 // Текст с описанием приложения для панели About
 var aboutLabel = ui.Label(
     'Satellite Imagery Explorer\n' +
@@ -149,7 +128,7 @@ var aboutLabel = ui.Label(
     ' cloud filtering and custom date range,\n' +
     ' interactive image chips with AOI overlay,\n' +
     ' layer manager for temporal comparison,\n' +
-    ' export (GeoTIFF / TFRecord). \n'
+    ' export (GeoTIFF). \n'
 );
 
 var appCodeLink = ui.Label({
@@ -225,26 +204,6 @@ var regionWidthSlider = ui.Slider({
 var regionWidthPanel = ui.Panel(
     [regionWidthLabel, regionWidthSlider], null, {stretch: 'horizontal'});
 
-// Выбор формата экспорта
-var formatLabel = ui.Label({value: 'Export format', style: headerFont});
-var formatList = ['GEO_TIFF', 'TFRecord'];
-var formatSelect = ui.Select({
-    items: formatList,
-    placeholder: formatUrl,
-    value: formatUrl,
-    style: {stretch: 'horizontal'}
-});
-var formatPanel = ui.Panel([formatLabel, formatSelect], null, {stretch: 'horizontal'});
-
-// Контроль сжатия TIFF файлов
-var compressionLabel = ui.Label({value: 'TIFF compression', style: headerFont});
-var compressionCheckbox = ui.Checkbox({
-    label: 'Enable compression (smaller files)',
-    value: compressionUrl === 'true',
-    style: {margin: '0 0 0 0'}
-});
-var compressionPanel = ui.Panel([compressionLabel, compressionCheckbox], null, {stretch: 'horizontal'});
-
 // Сообщение о загрузке, чтобы пользователь видел, что идёт обработка.
 var waitMsgImgPanel = ui.Label({
     value: '⚙️' + ' Processing, please wait...',
@@ -265,7 +224,7 @@ var imgCardPanel = ui.Panel({
 });
 
 var emptyImagePanelLabel = ui.Label({
-    value: 'Adjust the options and click on the map to upload images \n Select a location and the images will appear here \n The list of links for downloading images is located on the left panel in the "Download" section',
+    value: 'Adjust the options and click on the map to upload images \n Select a location and the images will appear here',
     style: {
         fontSize: '14px',
         color: '#888',
@@ -315,7 +274,7 @@ var layersPanel = ui.Panel({
 // Заголовок панели слоев
 var layersTitle = ui.Label({
     value: 'Map Layers',
-    style: {fontSize: '16px', fontWeight: 'bold', margin: '0px 0px 10px 0px'}
+    style: {fontSize: '12px', fontWeight: 'bold', margin: '0px 0px 10px 0px'}
 });
 layersPanel.add(layersTitle);
 
@@ -332,24 +291,6 @@ var clearLayersButton = ui.Button({
     style: {margin: '10px 0px 0px 0px', stretch: 'horizontal'}
 });
 layersPanel.add(clearLayersButton);
-
-
-
-// ================================================================================
-// ‖                     ПЕРЕМЕННЫЕ ДЛЯ УПРАВЛЕНИЯ ЗАГРУЗК АМИ                    ‖
-// ================================================================================
-
-// Панель для списка загрузок
-var downloadsListPanel = ui.Panel({
-    layout: ui.Panel.Layout.flow('vertical'),
-    style: {maxHeight: '400px'}
-});
-
-// Информация о загрузках
-var downloadsInfoLabel = ui.Label({
-    value: 'Click "Download" on image cards to add files here',
-    style: {fontSize: '11px', color: '#666', margin: '10px 0px', fontStyle: 'italic'}
-});
 
 
 
@@ -705,83 +646,6 @@ function clearImgs() {
 }
 
 /**
- * Добавляет ссылку для скачивания в панель загрузок
- */
-function addDownloadLink(url, filename, date, sensorName) {
-    // Создаем панель для элемента загрузки
-    var downloadItemPanel = ui.Panel({
-        layout: ui.Panel.Layout.flow('vertical'),
-        style: {padding: '5px', backgroundColor: '#f9f9f9', margin: '2px 0px', border: '1px solid #ddd'}
-    });
-
-    var fileInfo = ui.Label({
-        value: date + ' - ' + shortenSensorName(sensorName),
-        style: {fontSize: '11px', fontWeight: 'bold', margin: '0px 0px 2px 0px'}
-    });
-
-    var fileName = ui.Label({
-        value: filename,
-        style: {fontSize: '10px', color: '#666', margin: '0px 0px 5px 0px'}
-    });
-
-    var downloadLink = ui.Label({
-        value: '⬇️ Download',
-        style: {
-            fontSize: '12px',
-            fontWeight: 'bold',
-            color: 'white',
-            backgroundColor: '#4CAF50',
-            padding: '5px',
-            margin: '0px 0px 0px 0px',
-            textAlign: 'center',
-            border: '1px solid #45a049'
-        },
-        targetUrl: url
-    });
-
-    var removeButton = ui.Button({
-        label: 'Remove',
-        style: {margin: '5px 0px 0px 0px', fontSize: '10px', padding: '2px'}
-    });
-
-    removeButton.onClick(function() {
-        downloadsListPanel.remove(downloadItemPanel);
-        // Показываем информационное сообщение, если список пуст
-        if (downloadsListPanel.widgets().length === 0) {
-            downloadsListPanel.add(downloadsInfoLabel);
-        }
-    });
-
-    downloadItemPanel.add(fileInfo);
-    downloadItemPanel.add(fileName);
-    downloadItemPanel.add(downloadLink);
-    downloadItemPanel.add(removeButton);
-
-    // Убираем информационное сообщение при добавлении первой загрузки
-    // Проверяем есть ли информационное сообщение в панели
-    var hasInfoLabel = false;
-    var widgets = downloadsListPanel.widgets();
-    for (var i = 0; i < widgets.length; i++) {
-        if (widgets.get(i) === downloadsInfoLabel) {
-            hasInfoLabel = true;
-            break;
-        }
-    }
-
-    if (hasInfoLabel) {
-        downloadsListPanel.remove(downloadsInfoLabel);
-    }
-
-    downloadsListPanel.add(downloadItemPanel);
-}
-
-
-
-// ================================================================================
-// ‖                     НОВЫЕ ФУНКЦИИ ДЛЯ УПРАВЛЕНИЯ СЛОЯМИ                      ‖
-// ================================================================================
-
-/**
  * Добавляет слой на карту и создает элемент управления в панели слоев
  */
 function addLayerToMap(imageData, aoiBox, cardCheckbox) {
@@ -815,17 +679,27 @@ function addLayerToMap(imageData, aoiBox, cardCheckbox) {
         style: {margin: '2px 0px', fontSize: '12px'}
     });
 
-    // Создаем кнопку удаления слоя
+    // Кнопка удаления слоя — яркий крестик, всегда видимый
     var removeButton = ui.Button({
-        label: '❌',
-        style: {margin: '0px 0px 0px 5px', width: '20px', height: '20px'}
+        label: 'X',
+        style: {
+            width: '20px',
+            height: '20px',
+            padding: '0px',
+            fontSize: '11px',
+            margin: '0 0 0 5px',
+        }
     });
 
     // Панель для элемента слоя
     var layerItemPanel = ui.Panel({
         widgets: [layerCheckbox, removeButton],
         layout: ui.Panel.Layout.flow('horizontal'),
-        style: {padding: '2px 5px', backgroundColor: '#f5f5f5', margin: '1px 0px'}
+        style: {
+            padding: '2px 5px',
+            backgroundColor: '#f5f5f5',
+            margin: '1px 0px',
+        }
     });
 
     // Сохраняем информацию о слое (теперь храним изображение и параметры для повторного добавления)
@@ -888,7 +762,12 @@ function removeLayerFromMap(layerId) {
 
         // Синхронизируем чекбокс на карточке
         if (layerData.cardCheckbox) {
-            layerData.cardCheckbox.setValue(false);
+            if (layerData.cardCheckbox instanceof ui.Checkbox) {
+                layerData.cardCheckbox.setValue(false);
+            } else {
+                layerData.cardCheckbox.style().set('backgroundColor', '#e0e0e0');
+                layerData.cardCheckbox.setLabel('☐');
+            }
         }
 
         // Удаляем элемент из панели слоев
@@ -1002,16 +881,14 @@ function displaySortedImages(allImageData, aoiBox, aoiCircle, waitLabel) {
             params: {region: aoiBox, dimensions: '200', crs: 'EPSG:3857', format: 'PNG'}
         });
 
-        // ЧЕКБОКС ДЛЯ ДОБАВЛЕНИЯ НА КАРТУ
+        // чекбокс
         var addToMapCheckbox = ui.Checkbox({
-            label: 'Add to map',
+            label: '',
             value: false,
-            style: {margin: '2px 0px', fontSize: '10px'}
+            style: {margin: '2px 8px 2px 0', width: '18px', height: '18px', minHeight: '32px'}
         });
-
-        // Обработчик изменения чекбокса
-        addToMapCheckbox.onChange(function(checked) {
-            if (checked) {
+        addToMapCheckbox.onChange(function (active) {
+            if (active) {
                 addLayerToMap(imageData, aoiBox, addToMapCheckbox);
             } else {
                 var layerId = date + '_' + shortenSensorNameForFile(sensorName);
@@ -1020,41 +897,55 @@ function displaySortedImages(allImageData, aoiBox, aoiCircle, waitLabel) {
         });
 
         // Кнопка скачивания TIFF на локальный компьютер
-        var downloadButtonLabel = date + ' (' + shortenSensorName(sensorName) + ') - Download';
-        var downloadButton = ui.Button(downloadButtonLabel, null, false, {fontSize: '9px', margin: '1px'});
+        var downloadButtonLabel = date + ' (' + shortenSensorName(sensorName) + ')';
+        var downloadButton = ui.Button(downloadButtonLabel, null, false, {fontSize: '11px', margin: '1px'});
+        // Панель для ссылки, появляется после нажатия на кнопку
+        var linkPanel = ui.Panel(null, ui.Panel.Layout.flow('horizontal'));
         downloadButton.onClick(function () {
-            var chipWidthKm = regionWidthSlider.getValue();
-            var selectedFormat = formatSelect.getValue();
-
-            // Автоматически скачиваем RGB визуализацию
             exp_im.getDownloadURL({
                 name: date + '_' + shortenSensorNameForFile(sensorName) + '_rgb',
                 region: aoiBox,
-                scale: 10, // Принудительно используем высокое разрешение 10м
+                scale: 10,
                 filePerBand: false,
-                format: selectedFormat,
-                maxPixels: 1e13,   // Значительно увеличиваем лимит пикселей
-                formatOptions: {
-                    cloudOptimized: true,  // Оптимизация для облачного хранения
-                    compressed: compressionCheckbox.getValue()  // Сжатие по состоянию чекбокса
-                }
+                format: 'GEO_TIFF',
+                maxPixels: 1e13,
+                formatOptions: {cloudOptimized: true, compressed: false}
             }, function (url) {
-                // Создаем имя файла
-                var filename = date + '_' + shortenSensorNameForFile(sensorName) + '_rgb.' +
-                    (selectedFormat === 'GEO_TIFF' ? 'tif' : 'tfrecord');
-
-                // Добавляем ссылку в панель загрузок
-                addDownloadLink(url, filename, date, sensorName);
+                if (url) {
+                    var linkLabel = ui.Label({
+                        value: '⬇️',
+                        style: {
+                            fontSize: '15px',
+                            color: '#4CAF50',
+                            backgroundColor: '#fff',
+                            padding: '0px',
+                            textAlign: 'center',
+                            margin: '0 0 0 8px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            minWidth: '32px',
+                            minHeight: '32px',
+                            maxWidth: '32px',
+                            maxHeight: '32px',
+                            height: '32px',
+                            width: '32px',
+                        },
+                        targetUrl: url
+                    });
+                    linkPanel.clear();
+                    linkPanel.add(linkLabel);
+                    downloadButton.setDisabled(true);
+                }
             });
         });
 
-        // Создаем панель для кнопок и чекбокса
-        var topPanel = ui.Panel([addToMapCheckbox], ui.Panel.Layout.flow('horizontal'), {stretch: 'horizontal'});
-        var buttonPanel = ui.Panel([downloadButton], ui.Panel.Layout.flow('horizontal'), {stretch: 'horizontal'});
-
+        // Теперь создаем одну общую горизонтальную панель для чекбокса, кнопки и ссылки
+        var topPanel = ui.Panel([addToMapCheckbox, downloadButton, linkPanel], ui.Panel.Layout.flow('horizontal'), {
+            stretch: 'horizontal',
+        });
+        var rowWrapper = ui.Panel([topPanel], null, {margin: '0 0 0 18px'});
         var imgCard = ui.Panel([
-            topPanel,
-            buttonPanel,
+            rowWrapper,
             thumbnail,
         ], null, {margin: '4px 0px 0px 4px', width: 'px'});
 
@@ -1124,7 +1015,8 @@ function renderGraphics(coords) {
 }
 
 /**
- * Обработчик клика по карте: запоминаем координаты, обновляем URL и перерисовываем.
+ * Обработчик клика по карте: запоминаем координаты, обновляем URL и триггерит отрисовку нового результата.
+ * @param {Object} coords - Объект с {lon, lat}
  */
 function handleMapClick(coords) {
     CLICKED = true;
@@ -1132,15 +1024,15 @@ function handleMapClick(coords) {
     ui.url.set('run', 'true');
     ui.url.set('lon', COORDS[0]);
     ui.url.set('lat', COORDS[1]);
-    
+
     // ОБНОВЛЯЕМ ПОЛЕ КООРДИНАТ ПРИ КАЖДОМ КЛИКЕ
     updateCoordField(coords);
-    
+
     renderGraphics(COORDS);
 }
 
 /**
- * Обработчик кнопки «Submit changes»: перерисовываем чипы и скрываем кнопку.
+ * Обработчик кнопки «Submit changes»: перерисовывает изменённые данные, скрывает кнопку после применения.
  */
 function handleSubmitClick() {
     renderGraphics(COORDS);
@@ -1158,8 +1050,6 @@ function setParams() {
     ui.url.set('rgb', rgbSelect.getValue());
     ui.url.set('cloud', cloudSlider.getValue());
     ui.url.set('chipwidth', regionWidthSlider.getValue());
-    ui.url.set('format', formatSelect.getValue()); // Сохраняем выбранный формат
-    ui.url.set('compression', compressionCheckbox.getValue()); // Сохраняем состояние сжатия
 }
 
 /**
@@ -1208,6 +1098,12 @@ function controlButtonHandler() {
         controlElements.style().set('shown', true);
         controlButton.setLabel('Options ❮');
     }
+
+    if (infoShow || controlShow) {
+        controlPanel.style().set('width', CONTROL_PANEL_WIDTH);
+    } else {
+        controlPanel.style().set('width', CONTROL_PANEL_WIDTH_HIDE);
+    }
 }
 
 /**
@@ -1224,79 +1120,20 @@ function infoButtonHandler() {
         infoElements.style().set('shown', true);
         infoButton.setLabel('About ❮');
     }
+
+    if (infoShow || controlShow) {
+        controlPanel.style().set('width', CONTROL_PANEL_WIDTH);
+    } else {
+        controlPanel.style().set('width', CONTROL_PANEL_WIDTH_HIDE);
+    }
 }
 
 /**
- * Показ/скрытие панели «Download».
+ * Обработчик кнопки очистки всех слоев
  */
-var downloadShow = false;
-function downloadButtonHandler() {
-    if(downloadShow) {
-        downloadShow = false;
-        downloadElements.style().set('shown', false);
-        downloadButton.setLabel('Download ❯');
-    } else {
-        downloadShow = true;
-        downloadElements.style().set('shown', true);
-        downloadButton.setLabel('Download ❮');
-    }
-
-    if(infoShow || controlShow || downloadShow) {
-        controlPanel.style().set('width', CONTROL_PANEL_WIDTH);
-    } else {
-        controlPanel.style().set('width', CONTROL_PANEL_WIDTH);
-    }
+function clearAllLayersHandler() {
+    clearAllLayers();
 }
-
-
-
-// ================================================================================
-// ‖                                 ИНИЦИАЛИЗАЦИЯ UI                             ‖
-// ================================================================================
-
-infoElements.add(infoLabel);
-infoElements.add(aboutLabel);
-infoElements.add(appCodeLink);
-infoElements.add(appUserGuide);
-
-controlElements.add(optionsLabel);
-controlElements.add(sensorPanel);
-controlElements.add(rgbPanel);
-controlElements.add(durationPanel);
-controlElements.add(cloudPanel);
-controlElements.add(regionWidthPanel);
-controlElements.add(formatPanel); // Добавляем панель выбора формата
-controlElements.add(compressionPanel); // Добавляем панель сжатия
-controlElements.add(submitButton);
-
-downloadElements.add(downloadLabel);
-downloadElements.add(downloadsInfoLabel);
-downloadElements.add(downloadsListPanel);
-
-controlPanel.add(buttonPanel);
-controlPanel.add(infoElements);
-controlPanel.add(controlElements);
-controlPanel.add(downloadElements);
-
-map.add(controlPanel);
-map.add(panel);
-map.add(layersPanel); // Добавляем панель слоев на карту
-
-infoButton.onClick(infoButtonHandler);
-controlButton.onClick(controlButtonHandler);
-downloadButton.onClick(downloadButtonHandler);
-rgbSelect.onChange(optionChange);
-txtbox1.onChange(optionChange);
-txtbox2.onChange(optionChange);
-formatSelect.onChange(optionChange); // Добавляем обработчик изменения формата
-cloudSlider.onChange(optionChange);
-regionWidthSlider.onChange(optionChange);
-compressionCheckbox.onChange(optionChange); // Добавляем обработчик изменения сжатия
-submitButton.onClick(handleSubmitClick);
-map.onClick(handleMapClick);
-
-// Обработчик кнопки очистки всех слоев
-clearLayersButton.onClick(clearAllLayers);
 
 /**
  * Быстрое масштабирование по введённым координатам и уровню зума.
@@ -1328,9 +1165,43 @@ ui.root.add(splitPanel);
 if (ui.url.get('run') === 'true') {
     CLICKED = true;
     COORDS = [ui.url.get('lon'), ui.url.get('lat')];
-    
+
     // ОБНОВЛЯЕМ ПОЛЕ КООРДИНАТ ПРИ ЗАГРУЗКЕ С СОХРАНЕННЫМИ КООРДИНАТАМИ
     updateCoordField({lon: COORDS[0], lat: COORDS[1]});
-    
+
     renderGraphics(COORDS);
 }
+
+infoElements.add(infoLabel);
+infoElements.add(aboutLabel);
+infoElements.add(appCodeLink);
+infoElements.add(appUserGuide);
+
+controlElements.add(optionsLabel);
+controlElements.add(sensorPanel);
+controlElements.add(rgbPanel);
+controlElements.add(durationPanel);
+controlElements.add(cloudPanel);
+controlElements.add(regionWidthPanel);
+controlElements.add(submitButton);
+
+controlPanel.add(buttonPanel);
+controlPanel.add(infoElements);
+controlPanel.add(controlElements);
+
+map.add(controlPanel);
+map.add(panel);
+map.add(layersPanel); // Добавляем панель слоев на карту
+
+infoButton.onClick(infoButtonHandler);
+controlButton.onClick(controlButtonHandler);
+rgbSelect.onChange(optionChange);
+txtbox1.onChange(optionChange);
+txtbox2.onChange(optionChange);
+cloudSlider.onChange(optionChange);
+regionWidthSlider.onChange(optionChange);
+submitButton.onClick(handleSubmitClick);
+map.onClick(handleMapClick);
+
+// Обработчик кнопки очистки всех слоев
+clearLayersButton.onClick(clearAllLayersHandler);
