@@ -224,7 +224,7 @@ var imgCardPanel = ui.Panel({
 });
 
 var emptyImagePanelLabel = ui.Label({
-    value: 'Adjust the options and click on the map to upload images \n Select a location and the images will appear here',
+    value: 'Select a location, set up options, and images will appear here.',
     style: {
         fontSize: '14px',
         color: '#888',
@@ -672,23 +672,27 @@ function addLayerToMap(imageData, aoiBox, cardCheckbox) {
     var layers = map.layers();
     var layer = layers.get(layers.length() - 1);
 
-    // Создаем чекбокс для управления видимостью слоя
-    var layerCheckbox = ui.Checkbox({
-        label: date + ' (' + shortenSensorName(sensorName) + ')',
-        value: true,
-        style: {margin: '2px 0px', fontSize: '12px'}
-    });
-
     // Кнопка удаления слоя — яркий крестик, всегда видимый
     var removeButton = ui.Button({
         label: 'X',
         style: {
-            width: '20px',
-            height: '20px',
+            width: '24px',
+            height: '24px',
             padding: '0px',
-            fontSize: '11px',
-            margin: '0 0 0 5px',
+            fontSize: '12px',
+            margin: '0 0 0 8px',
+            backgroundColor: '#ff4444',
+            color: 'white',
+            fontWeight: 'bold',
+            border: '2px solid #cc0000'
         }
+    });
+
+    // Чекбокс для управления видимостью
+    var layerCheckbox = ui.Checkbox({
+        label: date + ' (' + shortenSensorName(sensorName) + ')',
+        value: true,
+        style: {margin: '2px 0px', fontSize: '12px',}
     });
 
     // Панель для элемента слоя
@@ -696,19 +700,21 @@ function addLayerToMap(imageData, aoiBox, cardCheckbox) {
         widgets: [layerCheckbox, removeButton],
         layout: ui.Panel.Layout.flow('horizontal'),
         style: {
-            padding: '2px 5px',
-            backgroundColor: '#f5f5f5',
-            margin: '1px 0px',
+            padding: '6px 8px',
+            backgroundColor: '#f8f8f8',
+            margin: '3px 0px',
+            border: '1px solid #ddd',
+            borderRadius: '4px'
         }
     });
 
-    // Сохраняем информацию о слое (теперь храним изображение и параметры для повторного добавления)
+    // Сохраняем информацию о слое
     mapLayers[layerId] = {
         layer: layer,
         image: visualizedImage,
         visParams: {},
         checkbox: layerCheckbox,
-        cardCheckbox: cardCheckbox, // Сохраняем ссылку на чекбокс карточки
+        cardCheckbox: cardCheckbox,
         visible: true,
         layerItem: layerItemPanel,
         layerId: layerId
@@ -1015,8 +1021,7 @@ function renderGraphics(coords) {
 }
 
 /**
- * Обработчик клика по карте: запоминаем координаты, обновляем URL и триггерит отрисовку нового результата.
- * @param {Object} coords - Объект с {lon, lat}
+ * Обработчик клика по карте: запоминаем координаты, обновляем URL и перерисовываем.
  */
 function handleMapClick(coords) {
     CLICKED = true;
@@ -1032,7 +1037,7 @@ function handleMapClick(coords) {
 }
 
 /**
- * Обработчик кнопки «Submit changes»: перерисовывает изменённые данные, скрывает кнопку после применения.
+ * Обработчик кнопки «Submit changes»: перерисовываем чипы и скрываем кнопку.
  */
 function handleSubmitClick() {
     renderGraphics(COORDS);
