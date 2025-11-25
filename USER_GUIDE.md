@@ -7,7 +7,6 @@
 
 ### Перейдите в Демо
 <p align="center">
-<<<<<<< HEAD
   <a href="https://code.earthengine.google.com/4f22af54e97dd8b4d5f2aa12ce25d886?hideCode=true#run=true;lon=-87.59746093750002;lat=34.25694231088668;" target="_blank" style="text-decoration:none;">
     <img src="https://img.shields.io/badge/▶%20Открыть%20демо%20в%20Earth%20Engine-1a73e8?style=for-the-badge&logo=googleearth&logoColor=white" alt="Демо Google Earth Engine" />
   </a>
