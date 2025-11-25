@@ -403,7 +403,7 @@ var sensorInfo = {
     },
     'Sentinel-2 SR': {
         id: 'COPERNICUS/S2_SR_HARMONIZED',
-        scale: 20,
+        scale: 10,
         aoiRadius: 30,
         rgb: {
             'SWIR1/NIR/GREEN': {
@@ -434,7 +434,7 @@ var sensorInfo = {
     },
     'Sentinel-2 TOA': {
         id: 'COPERNICUS/S2_HARMONIZED',
-        scale: 20,
+        scale: 10,
         aoiRadius: 30,
         rgb: {
             'SWIR1/NIR/GREEN': {
@@ -911,7 +911,7 @@ function displaySortedImages(allImageData, aoiBox, aoiCircle, waitLabel) {
             exp_im.getDownloadURL({
                 name: date + '_' + shortenSensorNameForFile(sensorName) + '_rgb',
                 region: aoiBox,
-                scale: 10,
+                scale: scale,
                 filePerBand: false,
                 format: 'GEO_TIFF',
                 maxPixels: 1e13,
