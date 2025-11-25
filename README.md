@@ -3,7 +3,7 @@
 #### Эксплорер спутниковых снимков · 2025
 
 <p align="center">
-  <a href="https://code.earthengine.google.com/b29b5d1e95dfa7e952c1adde798a0649?hideCode=true" target="_blank">
+  <a href="https://code.earthengine.google.com/70a1856be8f6440264872e7d8a95d355?hideCode=true" target="_blank">
     <img src="https://img.shields.io/badge/▶%20Открыть%20демо%20в%20Earth%20Engine-1a73e8?style=for-the-badge&logo=googleearth&logoColor=white" alt="Демо Google Earth Engine" />
   </a>
   <br/>
